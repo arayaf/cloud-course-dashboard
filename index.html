@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cloud Technology for AI â Student Progress</title>
+<title>Cloud Technology for AI - Student Progress</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: Arial, sans-serif; background: #f4f6fb; color: #222; }
@@ -83,31 +83,31 @@
 <body>
 
 <header>
-  <h1>Cloud Technology for AI â Student Progress Dashboard</h1>
-  <p>Ubon Ratchathani University Â· June 22, 2026</p>
+  <h1>Cloud Technology for AI - Student Progress Dashboard</h1>
+  <p>Ubon Ratchathani University &middot; June 22, 2026</p>
 </header>
 
 <div class="tab-nav">
-  <button class="tab-btn active" onclick="switchTab('google')">âï¸ Google Skills</button>
-  <button class="tab-btn" onclick="switchTab('aws')">ð  AWS Academy</button>
-  <button class="tab-btn" onclick="switchTab('cisco')">ðµ Cisco Netacad</button>
+  <button class="tab-btn active" onclick="switchTab('google')">&#9729; Google Skills</button>
+  <button class="tab-btn" onclick="switchTab('aws')">&#128992; AWS Academy</button>
+  <button class="tab-btn" onclick="switchTab('cisco')">&#128309; Cisco Netacad</button>
 </div>
 
 <!-- ===== GOOGLE SKILLS TAB ===== -->
 <div id="tab-google" class="tab-content active">
   <div class="summary-bar" id="gSummary"></div>
   <div class="filters">
-    <label>Search: <input type="text" id="gSearch" placeholder="name or emailâ¦" style="width:190px" oninput="renderGoogle()"></label>
+    <label>Search: <input type="text" id="gSearch" placeholder="name or email..." style="width:190px" oninput="renderGoogle()"></label>
     <label>Lab: <select id="gLabFilter" onchange="renderGoogle()">
       <option value="all">All</option>
       <option value="passed">Passed</option>
       <option value="attempted">Not passed</option>
     </select></label>
     <label>Sort: <select id="gSort" onchange="renderGoogle()">
-      <option value="course_desc">Course score â</option>
-      <option value="course_asc">Course score â</option>
-      <option value="name">Name AâZ</option>
-      <option value="time_desc">Total time â</option>
+      <option value="course_desc">Course score v</option>
+      <option value="course_asc">Course score ^</option>
+      <option value="name">Name A-Z</option>
+      <option value="time_desc">Total time v</option>
     </select></label>
   </div>
   <div class="table-wrap">
@@ -135,12 +135,12 @@
 <div id="tab-aws" class="tab-content">
   <div class="summary-bar" id="awsSummary"></div>
   <div class="filters">
-    <label>Search: <input type="text" id="awsSearch" placeholder="name or emailâ¦" style="width:190px" oninput="renderAWS()"></label>
+    <label>Search: <input type="text" id="awsSearch" placeholder="name or email..." style="width:190px" oninput="renderAWS()"></label>
     <label>Sort: <select id="awsSort" onchange="renderAWS()">
-      <option value="score_desc">Overall score â</option>
-      <option value="score_asc">Overall score â</option>
-      <option value="name">Name AâZ</option>
-      <option value="labs_desc">Labs score â</option>
+      <option value="score_desc">Overall score v</option>
+      <option value="score_asc">Overall score ^</option>
+      <option value="name">Name A-Z</option>
+      <option value="labs_desc">Labs score v</option>
     </select></label>
   </div>
   <div class="table-wrap">
@@ -177,11 +177,11 @@
 <div id="tab-cisco" class="tab-content">
   <div class="summary-bar" id="ciscoSummary"></div>
   <div class="filters">
-    <label>Search: <input type="text" id="ciscoSearch" placeholder="name or emailâ¦" style="width:190px" oninput="renderCisco()"></label>
+    <label>Search: <input type="text" id="ciscoSearch" placeholder="name or email..." style="width:190px" oninput="renderCisco()"></label>
     <label>Sort: <select id="ciscoSort" onchange="renderCisco()">
-      <option value="name">Name AâZ</option>
-      <option value="grade_desc">Class Grade â</option>
-      <option value="exam_desc">Exam Score â</option>
+      <option value="name">Name A-Z</option>
+      <option value="grade_desc">Class Grade v</option>
+      <option value="exam_desc">Exam Score v</option>
     </select></label>
   </div>
   <div class="table-wrap">
@@ -204,7 +204,7 @@
 </div>
 
 <script>
-// ââ Tab switching ââââââââââââââââââââââââââââââââââââââ
+// - Tab switching -
 function switchTab(name) {
   document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -212,7 +212,7 @@ function switchTab(name) {
   event.currentTarget.classList.add('active');
 }
 
-// ââ Helpers âââââââââââââââââââââââââââââââââââââââââââ
+// - Helpers -
 function fmtName(n) {
   return n.split('.').slice(0,2).map(p => p.charAt(0).toUpperCase()+p.slice(1)).join(' ');
 }
@@ -220,18 +220,18 @@ function barColor(p) {
   return p >= 80 ? '#1e7e34' : p >= 50 ? '#f57c00' : p >= 20 ? '#ef6c00' : '#e53935';
 }
 function scoreCell(v) {
-  if (v === null || v === undefined) return '<span class="score-cell s-none">â</span>';
+  if (v === null || v === undefined) return '<span class="score-cell s-none">&mdash;</span>';
   const cls = v >= 80 ? 's-high' : v >= 50 ? 's-mid' : v > 0 ? 's-low' : 's-none';
   return `<span class="score-cell ${cls}">${v.toFixed(0)}</span>`;
 }
 function barHtml(v, showPct=true) {
-  if (v === null || v === undefined) return '<span style="color:#ccc;font-size:11px">â</span>';
+  if (v === null || v === undefined) return '<span style="color:#ccc;font-size:11px">&mdash;</span>';
   return `<div class="bar-wrap"><div class="bar"><div class="bar-fill" style="width:${v}%;background:${barColor(v)}"></div></div>${showPct?`<div class="bar-pct">${v.toFixed(1)}%</div>`:''}</div>`;
 }
 
-// ââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// -
 // GOOGLE SKILLS DATA
-// ââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// -
 const gStudents = [
   {"email":"ajalawit.ph.69@ubu.ac.th","name":"ajalawit.ph.69","lab_status":"passed","lab_score":100.0,"lab_attempts":1,"lab_time":44,"course_status":"not_started","course_score":null,"course_time":0,"total_time":44},
   {"email":"chalermsak.th.69@ubu.ac.th","name":"chalermsak.th.69","lab_status":"passed","lab_score":100.0,"lab_attempts":1,"lab_time":45,"course_status":"attempted","course_score":4.9,"course_time":45,"total_time":90},
@@ -292,7 +292,7 @@ function renderGoogle() {
   const labPassed = data.filter(s=>s.lab_status==='passed').length;
   const started = data.filter(s=>s.course_status!=='not_started').length;
   const withScore = data.filter(s=>s.course_score!==null&&s.course_score>0);
-  const avg = withScore.length?(withScore.reduce((s,x)=>s+x.course_score,0)/withScore.length).toFixed(1):'â';
+  const avg = withScore.length?(withScore.reduce((s,x)=>s+x.course_score,0)/withScore.length).toFixed(1):'&mdash;';
   document.getElementById('gSummary').innerHTML = `
     <div class="card"><div class="num">${data.length}</div><div class="lbl">Students</div></div>
     <div class="card"><div class="num" style="color:#1e7e34">${labPassed}</div><div class="lbl">Lab Passed</div></div>
@@ -307,18 +307,18 @@ function renderGoogle() {
     <td style="color:#aaa;font-size:11px">${i+1}</td>
     <td><div style="font-weight:600;font-size:13px">${fmtName(s.name)}</div><div class="email-txt">${s.email}</div></td>
     <td class="center"><span class="badge ${s.lab_status==='passed'?'b-passed':s.lab_status==='attempted'?'b-attempted':'b-none'}">${statusLabel[s.lab_status]}</span></td>
-    <td style="min-width:110px">${s.lab_score!==null?barHtml(s.lab_score):'<span style="color:#ccc">â</span>'}</td>
-    <td class="center" style="font-size:11px;color:#888">${s.lab_attempts>0?s.lab_attempts+'x':'â'}</td>
+    <td style="min-width:110px">${s.lab_score!==null?barHtml(s.lab_score):'<span style="color:#ccc">&mdash;</span>'}</td>
+    <td class="center" style="font-size:11pz;color:#888">${s.lab_attempts>0?s.lab_attempts+'x':'&mdash;'}</td>
     <td class="center"><span class="badge ${s.course_status==='passed'?'b-passed':s.course_status==='attempted'?'b-attempted':'b-none'}">${statusLabel[s.course_status]}</span></td>
-    <td style="min-width:130px">${s.course_score!==null?barHtml(s.course_score):'<span style="color:#ccc">â</span>'}</td>
-    <td class="center" style="font-size:11px">${s.course_time>0?s.course_time:'â'}</td>
+    <td style="min-width:130px">${s.course_score!==null?barHtml(s.course_score):'<span style="color:#ccc">&mdash;</span>'}</td>
+    <td class="center" style="font-size:11px">${s.course_time>0?s.course_time:'&mdash;'}</td>
     <td class="center" style="font-weight:600">${s.total_time}</td>
   </tr>`).join('');
 }
 
-// ââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// -
 // AWS DATA
-// ââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// -
 const awsStudents = [
   {"email":"ajalawit.ph.69@ubu.ac.th","name":"ajalawit.ph.69","labs":[null,null,null,null,null,null],"kcs":[null,null,null,null,null,null,null,null,null,null],"activities":[null,null],"final_score":0.0,"labs_final":0.0,"kc_final":0.0},
   {"email":"chalermsak.th.69@ubu.ac.th","name":"chalermsak.th.69","labs":[null,null,null,null,null,null],"kcs":[null,null,null,null,null,null,null,null,null,null],"activities":[null,null],"final_score":0.0,"labs_final":0.0,"kc_final":0.0},
@@ -394,9 +394,9 @@ function renderAWS() {
   </tr>`).join('');
 }
 
-// ââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// -
 // CISCO NETACAD DATA
-// ââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// -
 const ciscoStudents = [
   {"email":"chanawee.bo.69@ubu.ac.th","name":"Chanawee Boonmanud","exam_submitted":"NO","survey_submitted":"NO","exam_score":null,"assessment":null,"class_grade":0.0},
   {"email":"wachirawit.bo.69@ubu.ac.th","name":"Wachirawit Boonrin","exam_submitted":"NO","survey_submitted":"NO","exam_score":null,"assessment":null,"class_grade":0.0},
@@ -425,7 +425,7 @@ const ciscoStudents = [
   {"email":"treeradet.ri.69@ubu.ac.th","name":"Treeradet Ritkomrop","exam_submitted":"NO","survey_submitted":"NO","exam_score":null,"assessment":null,"class_grade":0.0},
   {"email":"natthanicha.ro.69@ubu.ac.th","name":"Natthanicha Roplok","exam_submitted":"NO","survey_submitted":"NO","exam_score":null,"assessment":null,"class_grade":0.0},
   {"email":"natthida.sa.69@ubu.ac.th","name":"Natthida Saisuk","exam_submitted":"NO","survey_submitted":"NO","exam_score":null,"assessment":null,"class_grade":0.0},
-  {"email":"phuwanat.sa.69@ubu.ac.th","name":"Phuwanat Saiwaew","exam_submitted":"NO","survey_submitted":"NO","exam_score":null,"assessment":null,"class_grade":0.0},
+  {"email":"phuwanat.sa.69@ubu.ac.th","name":"Phuwanat Saiwaey","exam_submitted":"NO","survey_submitted":"NO","exam_score":null,"assessment":null,"class_grade":0.0},
   {"email":"tirapat.sa.69@ubu.ac.th","name":"Tirapat Saohong","exam_submitted":"NO","survey_submitted":"NO","exam_score":null,"assessment":null,"class_grade":0.0},
   {"email":"natthakit.sr.69@ubu.ac.th","name":"Natthakit Srichan","exam_submitted":"NO","survey_submitted":"NO","exam_score":null,"assessment":null,"class_grade":0.0},
   {"email":"lakkana.sr.69@ubu.ac.th","name":"Lakkana Sripo","exam_submitted":"NO","survey_submitted":"NO","exam_score":null,"assessment":null,"class_grade":0.0},
@@ -467,13 +467,13 @@ function renderCisco() {
     <td><div style="font-weight:600;font-size:13px">${s.name}</div><div class="email-txt">${s.email}</div></td>
     <td class="center"><span class="badge ${s.exam_submitted==='YES'?'b-passed':'b-none'}">${s.exam_submitted}</span></td>
     <td class="center"><span class="badge ${s.survey_submitted==='YES'?'b-passed':'b-none'}">${s.survey_submitted}</span></td>
-    <td class="center">${s.exam_score!==null?`<span style="font-weight:600">${s.exam_score}</span>`:'<span style="color:#ccc">â</span>'}</td>
-    <td>${s.assessment!==null?barHtml(s.assessment):'<span style="color:#ccc">â</span>'}</td>
+    <td class="center">${s.exam_score!==null?`<span style="font-weight:600">${s.exam_score}</span>`:'<span style="color:#ccc">&mdash;</span>'}</td>
+    <td>${s.assessment!==null?barHtml(s.assessment):'<span style="color:#ccc">&mdash;</span>'}</td>
     <td class="center"><span style="font-weight:600">${s.class_grade.toFixed(2)}%</span></td>
   </tr>`).join('');
 }
 
-// ââ Init ââââââââââââââââââââââââââââââââââââââââââââââ
+// - Init -
 renderGoogle();
 renderAWS();
 renderCisco();
