@@ -8,19 +8,19 @@
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: Arial, sans-serif; background: #f4f6fb; color: #222; }
 
-  header { background: linear-gradient(135deg, #1a73e8, #0d47a1); color: white; padding: 20px 32px; }
+  header { background: linear-gradient(135deg, #ff8f00, #e65100); color: white; padding: 20px 32px; }
   header h1 { font-size: 19px; font-weight: 700; }
   header p  { font-size: 12px; opacity: 0.85; margin-top: 3px; }
 
   /* Tab nav */
-  .tab-nav { display: flex; background: #0d47a1; padding: 0 32px; gap: 4px; }
+  .tab-nav { display: flex; background: #e65100; padding: 0 32px; gap: 4px; }
   .tab-btn {
     padding: 12px 24px; font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.7);
     border: none; background: none; cursor: pointer; border-bottom: 3px solid transparent;
     transition: all 0.15s;
   }
   .tab-btn:hover { color: white; }
-  .tab-btn.active { color: white; border-bottom-color: #4fc3f7; }
+  .tab-btn.active { color: white; border-bottom-color: #ffe082; }
   .tab-btn .coming-soon { font-size: 10px; font-weight: 400; opacity: 0.6; margin-left: 4px; }
 
   /* Tab content */
@@ -31,7 +31,7 @@
   .summary-bar { display: flex; gap: 14px; padding: 18px 32px; flex-wrap: wrap; }
   .card { background: white; border-radius: 10px; padding: 14px 20px; flex: 1; min-width: 120px;
           box-shadow: 0 1px 4px rgba(0,0,0,.08); text-align: center; }
-  .card .num { font-size: 26px; font-weight: 700; color: #1a73e8; }
+  .card .num { font-size: 26px; font-weight: 700; color: #f57c00; }
   .card .lbl { font-size: 11px; color: #666; margin-top: 3px; }
 
   /* Filters */
@@ -43,12 +43,12 @@
   .table-wrap { padding: 0 32px 40px; overflow-x: auto; }
   table { width: 100%; border-collapse: collapse; background: white; border-radius: 10px; overflow: hidden;
           box-shadow: 0 1px 4px rgba(0,0,0,.08); font-size: 12px; }
-  thead th { background: #1a73e8; color: white; padding: 9px 10px; text-align: left; font-weight: 600; white-space: nowrap; }
+  thead th { background: #f57c00; color: white; padding: 9px 10px; text-align: left; font-weight: 600; white-space: nowrap; }
   thead th.center { text-align: center; }
-  thead th.group-hdr { background: #0d47a1; text-align: center; font-size: 11px; letter-spacing: 0.3px; }
+  thead th.group-hdr { background: #e65100; text-align: center; font-size: 11px; letter-spacing: 0.3px; }
   tbody tr { border-bottom: 1px solid #eef; }
   tbody tr:last-child { border-bottom: none; }
-  tbody tr:hover { background: #f0f5ff; }
+  tbody tr:hover { background: #fff3e0; }
   td { padding: 8px 10px; vertical-align: middle; }
   td.center { text-align: center; }
   .email-txt { font-size: 10px; color: #999; }
@@ -217,19 +217,19 @@ function fmtName(n) {
   return n.split('.').slice(0,2).map(p => p.charAt(0).toUpperCase()+p.slice(1)).join(' ');
 }
 function barColor(p) {
-  return p >= 80 ? '#1e7e34' : p >= 50 ? '#1a73e8' : p >= 20 ? '#f0a500' : '#e53935';
+  return p >= 80 ? '#1e7e34' : p >= 50 ? '#f57c00' : p >= 20 ? '#ef6c00' : '#e53935';
 }
 function scoreCell(v) {
   if (v === null || v === undefined) return '<span class="score-cell s-none">â</span>';
   const cls = v >= 80 ? 's-high' : v >= 50 ? 's-mid' : v > 0 ? 's-low' : 's-none';
-  return `<span class="score-cell ${cls}">${v > 0 ? v.toFixed(0) : 'â'}</span>`;
+  return `<span class="score-cell ${cls}">${v.toFixed(0)}</span>`;
 }
 function barHtml(v, showPct=true) {
   if (v === null || v === undefined) return '<span style="color:#ccc;font-size:11px">â</span>';
   return `<div class="bar-wrap"><div class="bar"><div class="bar-fill" style="width:${v}%;background:${barColor(v)}"></div></div>${showPct?`<div class="bar-pct">${v.toFixed(1)}%</div>`:''}</div>`;
 }
 
-// âââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// ââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 // GOOGLE SKILLS DATA
 // ââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 const gStudents = [
@@ -469,7 +469,7 @@ function renderCisco() {
     <td class="center"><span class="badge ${s.survey_submitted==='YES'?'b-passed':'b-none'}">${s.survey_submitted}</span></td>
     <td class="center">${s.exam_score!==null?`<span style="font-weight:600">${s.exam_score}</span>`:'<span style="color:#ccc">â</span>'}</td>
     <td>${s.assessment!==null?barHtml(s.assessment):'<span style="color:#ccc">â</span>'}</td>
-    <td class="center">${s.class_grade>0?`<span style="font-weight:600">${s.class_grade.toFixed(2)}%</span>`:'<span style="color:#ccc">â</span>'}</td>
+    <td class="center"><span style="font-weight:600">${s.class_grade.toFixed(2)}%</span></td>
   </tr>`).join('');
 }
 
