@@ -3,134 +3,236 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cloud Computing Fundamentals — Student Progress</title>
+<title>Cloud Technology for AI â Student Progress</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: Arial, sans-serif; background: #f4f6fb; color: #222; }
 
-  header {
-    background: linear-gradient(135deg, #1a73e8, #0d47a1);
-    color: white; padding: 24px 32px;
-  }
-  header h1 { font-size: 20px; font-weight: 700; }
-  header p  { font-size: 12px; opacity: 0.85; margin-top: 4px; }
+  header { background: linear-gradient(135deg, #1a73e8, #0d47a1); color: white; padding: 20px 32px; }
+  header h1 { font-size: 19px; font-weight: 700; }
+  header p  { font-size: 12px; opacity: 0.85; margin-top: 3px; }
 
-  .summary-bar { display: flex; gap: 16px; padding: 20px 32px; flex-wrap: wrap; }
-  .card {
-    background: white; border-radius: 10px; padding: 16px 22px;
-    flex: 1; min-width: 130px;
-    box-shadow: 0 1px 4px rgba(0,0,0,.08); text-align: center;
+  /* Tab nav */
+  .tab-nav { display: flex; background: #0d47a1; padding: 0 32px; gap: 4px; }
+  .tab-btn {
+    padding: 12px 24px; font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.7);
+    border: none; background: none; cursor: pointer; border-bottom: 3px solid transparent;
+    transition: all 0.15s;
   }
-  .card .num { font-size: 28px; font-weight: 700; color: #1a73e8; }
-  .card .lbl { font-size: 11px; color: #666; margin-top: 4px; }
+  .tab-btn:hover { color: white; }
+  .tab-btn.active { color: white; border-bottom-color: #4fc3f7; }
+  .tab-btn .coming-soon { font-size: 10px; font-weight: 400; opacity: 0.6; margin-left: 4px; }
 
-  .filters { padding: 0 32px 16px; display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+  /* Tab content */
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  /* Summary bar */
+  .summary-bar { display: flex; gap: 14px; padding: 18px 32px; flex-wrap: wrap; }
+  .card { background: white; border-radius: 10px; padding: 14px 20px; flex: 1; min-width: 120px;
+          box-shadow: 0 1px 4px rgba(0,0,0,.08); text-align: center; }
+  .card .num { font-size: 26px; font-weight: 700; color: #1a73e8; }
+  .card .lbl { font-size: 11px; color: #666; margin-top: 3px; }
+
+  /* Filters */
+  .filters { padding: 0 32px 14px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
   .filters label { font-size: 13px; color: #555; }
-  .filters select, .filters input {
-    border: 1px solid #ccd; border-radius: 6px;
-    padding: 6px 10px; font-size: 13px; background: white;
-  }
+  .filters select, .filters input { border: 1px solid #ccd; border-radius: 6px; padding: 5px 10px; font-size: 13px; background: white; }
 
+  /* Tables */
   .table-wrap { padding: 0 32px 40px; overflow-x: auto; }
-  table {
-    width: 100%; border-collapse: collapse; background: white;
-    border-radius: 10px; overflow: hidden;
-    box-shadow: 0 1px 4px rgba(0,0,0,.08); font-size: 13px;
-  }
-  thead tr.group th {
-    background: #0d47a1; color: white;
-    padding: 8px 14px; text-align: center; font-size: 11px; font-weight: 600;
-    letter-spacing: 0.5px; text-transform: uppercase;
-  }
-  thead tr.group th.spacer { background: #1a73e8; }
-  thead tr.headers th {
-    background: #1a73e8; color: white;
-    padding: 10px 14px; text-align: left; font-weight: 600; font-size: 12px;
-  }
-  thead tr.headers th.center { text-align: center; }
+  table { width: 100%; border-collapse: collapse; background: white; border-radius: 10px; overflow: hidden;
+          box-shadow: 0 1px 4px rgba(0,0,0,.08); font-size: 12px; }
+  thead th { background: #1a73e8; color: white; padding: 9px 10px; text-align: left; font-weight: 600; white-space: nowrap; }
+  thead th.center { text-align: center; }
+  thead th.group-hdr { background: #0d47a1; text-align: center; font-size: 11px; letter-spacing: 0.3px; }
   tbody tr { border-bottom: 1px solid #eef; }
   tbody tr:last-child { border-bottom: none; }
   tbody tr:hover { background: #f0f5ff; }
-  td { padding: 10px 14px; vertical-align: middle; }
+  td { padding: 8px 10px; vertical-align: middle; }
   td.center { text-align: center; }
-  .email { font-size: 11px; color: #999; }
+  .email-txt { font-size: 10px; color: #999; }
 
-  .badge {
-    display: inline-block; border-radius: 5px;
-    font-size: 11px; font-weight: 600; padding: 3px 9px;
-  }
-  .badge-passed      { background: #e6f4ea; color: #1e7e34; }
-  .badge-attempted   { background: #fff3cd; color: #856404; }
-  .badge-not_started { background: #f1f3f4; color: #aaa; }
+  /* Badges */
+  .badge { display: inline-block; border-radius: 4px; font-size: 10px; font-weight: 600; padding: 2px 7px; }
+  .b-passed    { background: #e6f4ea; color: #1e7e34; }
+  .b-attempted { background: #fff3cd; color: #856404; }
+  .b-none      { background: #f1f3f4; color: #aaa; }
 
-  .bar-wrap { display: flex; align-items: center; gap: 8px; }
-  .bar { height: 10px; border-radius: 5px; background: #e0e0e0; flex: 1; min-width: 70px; overflow: hidden; }
-  .bar-fill { height: 100%; border-radius: 5px; }
-  .bar-pct { font-size: 11px; color: #555; min-width: 38px; text-align: right; }
+  /* Progress bar */
+  .bar-wrap { display: flex; align-items: center; gap: 6px; }
+  .bar { height: 8px; border-radius: 4px; background: #e0e0e0; flex: 1; min-width: 60px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 4px; }
+  .bar-pct { font-size: 11px; color: #555; min-width: 34px; text-align: right; }
 
-  .attempts { font-size: 11px; color: #888; }
-  .no-results { text-align: center; color: #aaa; padding: 32px; }
+  /* Score cell (heatmap for AWS) */
+  .score-cell { text-align: center; font-size: 11px; font-weight: 600; border-radius: 4px; padding: 3px 5px; min-width: 36px; display: inline-block; }
+  .s-high { background: #c8e6c9; color: #1b5e20; }
+  .s-mid  { background: #fff9c4; color: #f57f17; }
+  .s-low  { background: #ffcdd2; color: #b71c1c; }
+  .s-none { background: #f5f5f5; color: #bbb; }
 
-  .divider { width: 1px; background: #dde; }
+  /* Placeholder */
+  .placeholder { text-align: center; padding: 60px 32px; color: #aaa; }
+  .placeholder h2 { font-size: 20px; color: #ccc; margin-bottom: 10px; }
+  .placeholder p  { font-size: 14px; }
+
+  .no-results { text-align: center; color: #aaa; padding: 28px; }
 </style>
 </head>
 <body>
 
 <header>
-  <h1>Google Cloud Computing Foundations — Student Progress Dashboard</h1>
-  <p>Cloud Technology for AI · Ubon Ratchathani University · June 22, 2026</p>
+  <h1>Cloud Technology for AI â Student Progress Dashboard</h1>
+  <p>Ubon Ratchathani University Â· June 22, 2026</p>
 </header>
 
-<div class="summary-bar" id="summaryBar"></div>
+<div class="tab-nav">
+  <button class="tab-btn active" onclick="switchTab('google')">âï¸ Google Skills</button>
+  <button class="tab-btn" onclick="switchTab('aws')">ð  AWS Academy</button>
+  <button class="tab-btn" onclick="switchTab('cisco')">ðµ Cisco Netacad</button>
+</div>
 
-<div class="filters">
-  <label>Search: <input type="text" id="searchInput" placeholder="name or email…" style="width:200px"></label>
-  <label>Lab:
-    <select id="labFilter">
+<!-- ===== GOOGLE SKILLS TAB ===== -->
+<div id="tab-google" class="tab-content active">
+  <div class="summary-bar" id="gSummary"></div>
+  <div class="filters">
+    <label>Search: <input type="text" id="gSearch" placeholder="name or emailâ¦" style="width:190px" oninput="renderGoogle()"></label>
+    <label>Lab: <select id="gLabFilter" onchange="renderGoogle()">
       <option value="all">All</option>
       <option value="passed">Passed</option>
       <option value="attempted">Not passed</option>
-    </select>
-  </label>
-  <label>Sort by:
-    <select id="sortSelect">
-      <option value="course_desc">Course score (high→low)</option>
-      <option value="course_asc">Course score (low→high)</option>
-      <option value="lab_desc">Lab score (high→low)</option>
-      <option value="name">Name (A→Z)</option>
-      <option value="time_desc">Total time (high→low)</option>
-    </select>
-  </label>
+    </select></label>
+    <label>Sort: <select id="gSort" onchange="renderGoogle()">
+      <option value="course_desc">Course score â</option>
+      <option value="course_asc">Course score â</option>
+      <option value="name">Name AâZ</option>
+      <option value="time_desc">Total time â</option>
+    </select></label>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th rowspan="2">#</th>
+          <th rowspan="2">Student</th>
+          <th class="group-hdr center" colspan="3">Lab: A Tour of Google Cloud</th>
+          <th class="group-hdr center" colspan="3">Course: Cloud Computing Fundamentals</th>
+          <th rowspan="2" class="center">Total Time</th>
+        </tr>
+        <tr>
+          <th class="center">Status</th><th>Score</th><th class="center">Tries</th>
+          <th class="center">Status</th><th>Progress</th><th class="center">Time (min)</th>
+        </tr>
+      </thead>
+      <tbody id="gBody"></tbody>
+    </table>
+    <div class="no-results" id="gNoResults" style="display:none">No students match.</div>
+  </div>
 </div>
 
-<div class="table-wrap">
-  <table>
-    <thead>
-      <tr class="group">
-        <th class="spacer" colspan="2"></th>
-        <th colspan="3">Lab: A Tour of Google Cloud Hands-on Labs</th>
-        <th colspan="3">Course: Cloud Computing Fundamentals</th>
-        <th class="spacer"></th>
-      </tr>
-      <tr class="headers">
-        <th>#</th>
-        <th>Student</th>
-        <th class="center">Status</th>
-        <th>Score</th>
-        <th class="center">Attempts</th>
-        <th class="center">Status</th>
-        <th>Progress</th>
-        <th class="center">Time (min)</th>
-        <th class="center">Total Time</th>
-      </tr>
-    </thead>
-    <tbody id="tableBody"></tbody>
-  </table>
-  <div class="no-results" id="noResults" style="display:none">No students match your filter.</div>
+<!-- ===== AWS TAB ===== -->
+<div id="tab-aws" class="tab-content">
+  <div class="summary-bar" id="awsSummary"></div>
+  <div class="filters">
+    <label>Search: <input type="text" id="awsSearch" placeholder="name or emailâ¦" style="width:190px" oninput="renderAWS()"></label>
+    <label>Sort: <select id="awsSort" onchange="renderAWS()">
+      <option value="score_desc">Overall score â</option>
+      <option value="score_asc">Overall score â</option>
+      <option value="name">Name AâZ</option>
+      <option value="labs_desc">Labs score â</option>
+    </select></label>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th rowspan="2">#</th>
+          <th rowspan="2">Student</th>
+          <th class="group-hdr center" colspan="6">Labs (out of 100)</th>
+          <th class="group-hdr center" colspan="10">Knowledge Checks (out of 100)</th>
+          <th class="group-hdr center" colspan="2">Activities</th>
+          <th rowspan="2" class="center">Overall</th>
+        </tr>
+        <tr>
+          <th class="center">L1<br>IAM</th>
+          <th class="center">L2<br>VPC</th>
+          <th class="center">L3<br>EC2</th>
+          <th class="center">L4<br>EBS</th>
+          <th class="center">L5<br>DB</th>
+          <th class="center">L6<br>Scale</th>
+          <th class="center">M1</th><th class="center">M2</th><th class="center">M3</th><th class="center">M4</th><th class="center">M5</th>
+          <th class="center">M6</th><th class="center">M7</th><th class="center">M8</th><th class="center">M9</th><th class="center">M10</th>
+          <th class="center">Bean-<br>stalk</th>
+          <th class="center">Lambda</th>
+        </tr>
+      </thead>
+      <tbody id="awsBody"></tbody>
+    </table>
+    <div class="no-results" id="awsNoResults" style="display:none">No students match.</div>
+  </div>
+</div>
+
+<!-- ===== CISCO TAB ===== -->
+<div id="tab-cisco" class="tab-content">
+  <div class="summary-bar" id="ciscoSummary"></div>
+  <div class="filters">
+    <label>Search: <input type="text" id="ciscoSearch" placeholder="name or emailâ¦" style="width:190px" oninput="renderCisco()"></label>
+    <label>Sort: <select id="ciscoSort" onchange="renderCisco()">
+      <option value="name">Name AâZ</option>
+      <option value="grade_desc">Class Grade â</option>
+      <option value="exam_desc">Exam Score â</option>
+    </select></label>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Student</th>
+          <th class="center">Final Exam<br>Submitted</th>
+          <th class="center">Survey<br>Submitted</th>
+          <th class="center">Final Exam<br>Score</th>
+          <th style="min-width:180px">Course Assessment<br><span style="font-weight:400;font-size:10px;opacity:.8">Intro to Modern AI (out of 100)</span></th>
+          <th class="center">Class<br>Grade %</th>
+        </tr>
+      </thead>
+      <tbody id="ciscoBody"></tbody>
+    </table>
+    <div class="no-results" id="ciscoNoResults" style="display:none">No students match.</div>
+  </div>
 </div>
 
 <script>
-const students = [
+// ââ Tab switching ââââââââââââââââââââââââââââââââââââââ
+function switchTab(name) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  event.currentTarget.classList.add('active');
+}
+
+// ââ Helpers âââââââââââââââââââââââââââââââââââââââââââ
+function fmtName(n) {
+  return n.split('.').slice(0,2).map(p => p.charAt(0).toUpperCase()+p.slice(1)).join(' ');
+}
+function barColor(p) {
+  return p >= 80 ? '#1e7e34' : p >= 50 ? '#1a73e8' : p >= 20 ? '#f0a500' : '#e53935';
+}
+function scoreCell(v) {
+  if (v === null || v === undefined) return '<span class="score-cell s-none">â</span>';
+  const cls = v >= 80 ? 's-high' : v >= 50 ? 's-mid' : v > 0 ? 's-low' : 's-none';
+  return `<span class="score-cell ${cls}">${v > 0 ? v.toFixed(0) : 'â'}</span>`;
+}
+function barHtml(v, showPct=true) {
+  if (v === null || v === undefined) return '<span style="color:#ccc;font-size:11px">â</span>';
+  return `<div class="bar-wrap"><div class="bar"><div class="bar-fill" style="width:${v}%;background:${barColor(v)}"></div></div>${showPct?`<div class="bar-pct">${v.toFixed(1)}%</div>`:''}</div>`;
+}
+
+// âââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// GOOGLE SKILLS DATA
+// ââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+const gStudents = [
   {"email":"ajalawit.ph.69@ubu.ac.th","name":"ajalawit.ph.69","lab_status":"passed","lab_score":100.0,"lab_attempts":1,"lab_time":44,"course_status":"not_started","course_score":null,"course_time":0,"total_time":44},
   {"email":"chalermsak.th.69@ubu.ac.th","name":"chalermsak.th.69","lab_status":"passed","lab_score":100.0,"lab_attempts":1,"lab_time":45,"course_status":"attempted","course_score":4.9,"course_time":45,"total_time":90},
   {"email":"chanawee.bo.69@ubu.ac.th","name":"chanawee.bo.69","lab_status":"passed","lab_score":100.0,"lab_attempts":2,"lab_time":51,"course_status":"not_started","course_score":null,"course_time":0,"total_time":51},
@@ -171,98 +273,210 @@ const students = [
   {"email":"wimonrat.pr.69@ubu.ac.th","name":"wimonrat.pr.69","lab_status":"passed","lab_score":100.0,"lab_attempts":1,"lab_time":45,"course_status":"attempted","course_score":39.0,"course_time":73,"total_time":118}
 ];
 
-function barColor(pct) {
-  if (pct >= 80) return '#1e7e34';
-  if (pct >= 50) return '#1a73e8';
-  if (pct >= 20) return '#f0a500';
-  return '#e53935';
+function getGFiltered() {
+  const q = document.getElementById('gSearch').value.toLowerCase();
+  const lf = document.getElementById('gLabFilter').value;
+  const s = document.getElementById('gSort').value;
+  let d = [...gStudents];
+  if (q) d = d.filter(x => x.name.includes(q) || x.email.includes(q));
+  if (lf !== 'all') d = d.filter(x => x.lab_status === lf);
+  if (s === 'course_desc') d.sort((a,b) => (b.course_score??-1)-(a.course_score??-1));
+  if (s === 'course_asc')  d.sort((a,b) => (a.course_score??-1)-(b.course_score??-1));
+  if (s === 'name')        d.sort((a,b) => a.name.localeCompare(b.name));
+  if (s === 'time_desc')   d.sort((a,b) => b.total_time-a.total_time);
+  return d;
 }
 
-function formatName(name) {
-  const parts = name.split('.');
-  return parts.slice(0,2).map(p => p.charAt(0).toUpperCase() + p.slice(1)).join(' ');
-}
-
-function badgeHtml(status, label) {
-  return `<span class="badge badge-${status}">${label}</span>`;
-}
-
-function renderSummary(data) {
-  const total = data.length;
-  const labPassed = data.filter(s => s.lab_status === 'passed').length;
-  const courseStarted = data.filter(s => s.course_status !== 'not_started').length;
-  const withScore = data.filter(s => s.course_score !== null && s.course_score > 0);
-  const avgCourse = withScore.length ? (withScore.reduce((s,x)=>s+x.course_score,0)/withScore.length).toFixed(1) : '—';
-
-  document.getElementById('summaryBar').innerHTML = `
-    <div class="card"><div class="num">${total}</div><div class="lbl">Total Students</div></div>
+function renderGoogle() {
+  const data = getGFiltered();
+  const labPassed = data.filter(s=>s.lab_status==='passed').length;
+  const started = data.filter(s=>s.course_status!=='not_started').length;
+  const withScore = data.filter(s=>s.course_score!==null&&s.course_score>0);
+  const avg = withScore.length?(withScore.reduce((s,x)=>s+x.course_score,0)/withScore.length).toFixed(1):'â';
+  document.getElementById('gSummary').innerHTML = `
+    <div class="card"><div class="num">${data.length}</div><div class="lbl">Students</div></div>
     <div class="card"><div class="num" style="color:#1e7e34">${labPassed}</div><div class="lbl">Lab Passed</div></div>
-    <div class="card"><div class="num" style="color:#856404">${total - labPassed}</div><div class="lbl">Lab Not Passed</div></div>
-    <div class="card"><div class="num" style="color:#1a73e8">${courseStarted}</div><div class="lbl">Started Course</div></div>
-    <div class="card"><div class="num" style="color:#1a73e8">${avgCourse}%</div><div class="lbl">Avg Course Progress</div></div>
-  `;
+    <div class="card"><div class="num" style="color:#856404">${data.length-labPassed}</div><div class="lbl">Lab Not Passed</div></div>
+    <div class="card"><div class="num">${started}</div><div class="lbl">Course Started</div></div>
+    <div class="card"><div class="num">${avg}%</div><div class="lbl">Avg Course Progress</div></div>`;
+
+  if (!data.length) { document.getElementById('gBody').innerHTML=''; document.getElementById('gNoResults').style.display='block'; return; }
+  document.getElementById('gNoResults').style.display='none';
+  const statusLabel = {passed:'Passed',attempted:'Not Passed',not_started:'Not Started'};
+  document.getElementById('gBody').innerHTML = data.map((s,i) => `<tr>
+    <td style="color:#aaa;font-size:11px">${i+1}</td>
+    <td><div style="font-weight:600;font-size:13px">${fmtName(s.name)}</div><div class="email-txt">${s.email}</div></td>
+    <td class="center"><span class="badge ${s.lab_status==='passed'?'b-passed':s.lab_status==='attempted'?'b-attempted':'b-none'}">${statusLabel[s.lab_status]}</span></td>
+    <td style="min-width:110px">${s.lab_score!==null?barHtml(s.lab_score):'<span style="color:#ccc">â</span>'}</td>
+    <td class="center" style="font-size:11px;color:#888">${s.lab_attempts>0?s.lab_attempts+'x':'â'}</td>
+    <td class="center"><span class="badge ${s.course_status==='passed'?'b-passed':s.course_status==='attempted'?'b-attempted':'b-none'}">${statusLabel[s.course_status]}</span></td>
+    <td style="min-width:130px">${s.course_score!==null?barHtml(s.course_score):'<span style="color:#ccc">â</span>'}</td>
+    <td class="center" style="font-size:11px">${s.course_time>0?s.course_time:'â'}</td>
+    <td class="center" style="font-weight:600">${s.total_time}</td>
+  </tr>`).join('');
 }
 
-function getFiltered() {
-  const q = document.getElementById('searchInput').value.toLowerCase();
-  const lf = document.getElementById('labFilter').value;
-  const s = document.getElementById('sortSelect').value;
+// ââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// AWS DATA
+// ââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+const awsStudents = [
+  {"email":"ajalawit.ph.69@ubu.ac.th","name":"ajalawit.ph.69","labs":[null,null,null,null,null,null],"kcs":[null,null,null,null,null,null,null,null,null,null],"activities":[null,null],"final_score":0.0,"labs_final":0.0,"kc_final":0.0},
+  {"email":"chalermsak.th.69@ubu.ac.th","name":"chalermsak.th.69","labs":[null,null,null,null,null,null],"kcs":[null,null,null,null,null,null,null,null,null,null],"activities":[null,null],"final_score":0.0,"labs_final":0.0,"kc_final":0.0},
+  {"email":"chanawee.bo.69@ubu.ac.th","name":"chanawee.bo.69","labs":[null,null,null,null,null,null],"kcs":[null,null,null,null,null,null,null,null,null,null],"activities":[null,null],"final_score":0.0,"labs_final":0.0,"kc_final":0.0},
+  {"email":"chichaya.na.69@ubu.ac.th","name":"chichaya.na.69","labs":[null,null,null,null,null,null],"kcs":[null,null,null,null,null,null,null,null,null,null],"activities":[null,null],"final_score":0.0,"labs_final":0.0,"kc_final":0.0},
+  {"email":"chisanapat.pu.69@ubu.ac.th","name":"chisanapat.pu.69","labs":[null,null,null,null,null,null],"kcs":[null,null,null,null,null,null,null,null,null,null],"activities":[null,null],"final_score":0.0,"labs_final":0.0,"kc_final":0.0},
+  {"email":"danupisit.wa.69@ubu.ac.th","name":"danupisit.wa.69","labs":[null,null,null,null,null,null],"kcs":[null,null,null,null,null,null,null,null,null,null],"activities":[null,null],"final_score":0.0,"labs_final":0.0,"kc_final":0.0},
+  {"email":"graiwit.bh.69@ubu.ac.th","name":"graiwit.bh.69","labs":[null,null,null,null,null,null],"kcs":[null,null,null,null,null,null,null,null,null,null],"activities":[null,null],"final_score":0.0,"labs_final":0.0,"kc_final":0.0},
+  {"email":"natthakit.sr.69@ubu.ac.th","name":"natthakit.sr.69","labs":[null,null,null,null,null,null],"kcs":[null,null,null,null,null,null,null,null,null,null],"activities":[null,null],"final_score":0.0,"labs_final":0.0,"kc_final":0.0},
+  {"email":"lakkana.sr.69@ubu.ac.th","name":"lakkana.sr.69","labs":[null,null,null,null,null,null],"kcs":[null,null,null,null,null,null,null,null,null,null],"activities":[null,null],"final_score":0.0,"labs_final":0.0,"kc_final":0.0},
+  {"email":"natnicha.th.69@ubu.ac.th","name":"natnicha.th.69","labs":[null,null,null,null,null,null],"kcs":[null,null,null,null,null,null,null,null,null,null],"activities":[null,null],"final_score":0.0,"labs_final":0.0,"kc_final":0.0},
+  {"email":"nattaphat.pha.69@ubu.ac.th","name":"nattaphat.pha.69","labs":[null,null,null,null,null,null],"kcs":[null,null,null,null,null,null,null,null,null,null],"activities":[null,null],"final_score":0.0,"labs_final":0.0,"kc_final":0.0},
+  {"email":"natthanicha.ro.69@ubu.ac.th","name":"natthanicha.ro.69","labs":[null,null,null,null,null,null],"kcs":[null,null,null,null,null,null,null,null,null,null],"activities":[null,null],"final_score":0.0,"labs_final":0.0,"kc_final":0.0},
+  {"email":"natthida.sa.69@ubu.ac.th","name":"natthida.sa.69","labs":[null,null,null,null,null,null],"kcs":[null,null,null,null,null,null,null,null,null,null],"activities":[null,null],"final_score":0.0,"labs_final":0.0,"kc_final":0.0},
+  {"email":"nhannaphat.pi.69@ubu.ac.th","name":"nhannaphat.pi.69","labs":[null,null,null,null,null,null],"kcs":[null,null,null,null,null,null,null,null,null,null],"activities":[null,null],"final_score":0.0,"labs_final":0.0,"kc_final":0.0},
+  {"email":"pakin.na.69@ubu.ac.th","name":"pakin.na.69","labs":[null,null,null,null,null,null],"kcs":[null,null,null,null,null,null,null,null,null,null],"activities":[null,null],"final_score":0.0,"labs_final":0.0,"kc_final":0.0},
+  {"email":"pannawat.ch.69@ubu.ac.th","name":"pannawat.ch.69","labs":[null,null,null,null,null,null],"kcs":[null,null,null,null,null,null,null,null,null,null],"activities":[null,null],"final_score":0.0,"labs_final":0.0,"kc_final":0.0},
+  {"email":"pannawit.ra.69@ubu.ac.th","name":"pannawit.ra.69","labs":[null,null,null,null,null,null],"kcs":[null,null,null,null,null,null,null,null,null,null],"activities":[null,null],"final_score":0.0,"labs_final":0.0,"kc_final":0.0},
+  {"email":"paphawee.kh.69@ubu.ac.th","name":"paphawee.kh.69","labs":[null,null,null,null,null,null],"kcs":[null,null,null,null,null,null,null,null,null,null],"activities":[null,null],"final_score":0.0,"labs_final":0.0,"kc_final":0.0},
+  {"email":"parin.ch.69@ubu.ac.th","name":"parin.ch.69","labs":[null,null,null,null,null,null],"kcs":[null,null,null,null,null,null,null,null,null,null],"activities":[null,null],"final_score":0.0,"labs_final":0.0,"kc_final":0.0},
+  {"email":"pawarit.da.69@ubu.ac.th","name":"pawarit.da.69","labs":[null,null,null,null,null,null],"kcs":[null,null,null,null,null,null,null,null,null,null],"activities":[null,null],"final_score":0.0,"labs_final":0.0,"kc_final":0.0},
+  {"email":"peerada.tu.69@ubu.ac.th","name":"peerada.tu.69","labs":[null,null,null,null,null,null],"kcs":[null,null,null,null,null,null,null,null,null,null],"activities":[null,null],"final_score":0.0,"labs_final":0.0,"kc_final":0.0},
+  {"email":"phuwanat.sa.69@ubu.ac.th","name":"phuwanat.sa.69","labs":[null,null,null,null,null,null],"kcs":[null,null,null,null,null,null,null,null,null,null],"activities":[null,null],"final_score":0.0,"labs_final":0.0,"kc_final":0.0},
+  {"email":"pramot.kh.69@ubu.ac.th","name":"pramot.kh.69","labs":[null,null,null,null,null,null],"kcs":[null,null,null,null,null,null,null,null,null,null],"activities":[null,null],"final_score":0.0,"labs_final":0.0,"kc_final":0.0},
+  {"email":"prapasinee.in.69@ubu.ac.th","name":"prapasinee.in.69","labs":[null,null,null,null,null,null],"kcs":[null,null,null,null,null,null,null,null,null,null],"activities":[null,null],"final_score":0.0,"labs_final":0.0,"kc_final":0.0},
+  {"email":"prawonrat.kh.69@ubu.ac.th","name":"prawonrat.kh.69","labs":[null,null,null,null,null,null],"kcs":[null,null,null,null,null,null,null,null,null,null],"activities":[null,null],"final_score":0.0,"labs_final":0.0,"kc_final":0.0},
+  {"email":"sakaow.ka.69@ubu.ac.th","name":"sakaow.ka.69","labs":[null,null,null,null,null,null],"kcs":[null,null,null,null,null,null,null,null,null,null],"activities":[null,null],"final_score":0.0,"labs_final":0.0,"kc_final":0.0},
+  {"email":"sirapat.th.69@ubu.ac.th","name":"sirapat.th.69","labs":[null,null,null,null,null,null],"kcs":[null,null,null,null,null,null,null,null,null,null],"activities":[null,null],"final_score":0.0,"labs_final":0.0,"kc_final":0.0},
+  {"email":"siraphob.ni.69@ubu.ac.th","name":"siraphob.ni.69","labs":[null,null,null,null,null,null],"kcs":[null,null,null,null,null,null,null,null,null,null],"activities":[null,null],"final_score":0.0,"labs_final":0.0,"kc_final":0.0},
+  {"email":"supichaya.pa.69@ubu.ac.th","name":"supichaya.pa.69","labs":[null,null,null,null,null,null],"kcs":[null,null,null,null,null,null,null,null,null,null],"activities":[null,null],"final_score":0.0,"labs_final":0.0,"kc_final":0.0},
+  {"email":"tanawit.ji.69@ubu.ac.th","name":"tanawit.ji.69","labs":[null,null,null,null,null,null],"kcs":[null,null,null,null,null,null,null,null,null,null],"activities":[null,null],"final_score":0.0,"labs_final":0.0,"kc_final":0.0},
+  {"email":"thanawat.bu.69@ubu.ac.th","name":"thanawat.bu.69","labs":[null,null,null,null,null,null],"kcs":[null,null,null,null,null,null,null,null,null,null],"activities":[null,null],"final_score":0.0,"labs_final":0.0,"kc_final":0.0},
+  {"email":"tirapat.sa.69@ubu.ac.th","name":"tirapat.sa.69","labs":[null,null,null,null,null,null],"kcs":[null,null,null,null,null,null,null,null,null,null],"activities":[null,null],"final_score":0.0,"labs_final":0.0,"kc_final":0.0},
+  {"email":"treeradet.ri.69@ubu.ac.th","name":"treeradet.ri.69","labs":[null,null,null,null,null,null],"kcs":[null,null,null,null,null,null,null,null,null,null],"activities":[null,null],"final_score":0.0,"labs_final":0.0,"kc_final":0.0},
+  {"email":"triwitch.de.69@ubu.ac.th","name":"triwitch.de.69","labs":[null,null,null,null,null,null],"kcs":[null,null,null,null,null,null,null,null,null,null],"activities":[null,null],"final_score":0.0,"labs_final":0.0,"kc_final":0.0},
+  {"email":"vayu.th.69@ubu.ac.th","name":"vayu.th.69","labs":[null,null,null,null,null,null],"kcs":[null,null,null,null,null,null,null,null,null,null],"activities":[null,null],"final_score":0.0,"labs_final":0.0,"kc_final":0.0},
+  {"email":"wachirawit.bo.69@ubu.ac.th","name":"wachirawit.bo.69","labs":[null,null,null,null,null,null],"kcs":[null,null,null,null,null,null,null,null,null,null],"activities":[null,null],"final_score":0.0,"labs_final":0.0,"kc_final":0.0},
+  {"email":"wanatcharnan.su.69@ubu.ac.th","name":"wanatcharnan.su.69","labs":[null,null,null,null,null,null],"kcs":[null,null,null,null,null,null,null,null,null,null],"activities":[null,null],"final_score":0.0,"labs_final":0.0,"kc_final":0.0},
+  {"email":"wimonrat.pr.69@ubu.ac.th","name":"wimonrat.pr.69","labs":[null,null,null,null,null,null],"kcs":[null,null,null,null,null,null,null,null,null,null],"activities":[null,null],"final_score":0.0,"labs_final":0.0,"kc_final":0.0}
+];
 
-  let data = [...students];
-  if (q) data = data.filter(x => x.name.toLowerCase().includes(q) || x.email.toLowerCase().includes(q));
-  if (lf !== 'all') data = data.filter(x => x.lab_status === lf);
-
-  if (s === 'course_desc') data.sort((a,b) => (b.course_score??-1) - (a.course_score??-1));
-  if (s === 'course_asc')  data.sort((a,b) => (a.course_score??-1) - (b.course_score??-1));
-  if (s === 'lab_desc')    data.sort((a,b) => (b.lab_score??-1) - (a.lab_score??-1));
-  if (s === 'name')        data.sort((a,b) => a.name.localeCompare(b.name));
-  if (s === 'time_desc')   data.sort((a,b) => b.total_time - a.total_time);
-
-  return data;
+function getAWSFiltered() {
+  const q = document.getElementById('awsSearch').value.toLowerCase();
+  const s = document.getElementById('awsSort').value;
+  let d = [...awsStudents];
+  if (q) d = d.filter(x => x.name.includes(q) || x.email.includes(q));
+  if (s === 'score_desc') d.sort((a,b) => (b.final_score??-1)-(a.final_score??-1));
+  if (s === 'score_asc')  d.sort((a,b) => (a.final_score??-1)-(b.final_score??-1));
+  if (s === 'name')       d.sort((a,b) => a.name.localeCompare(b.name));
+  if (s === 'labs_desc')  d.sort((a,b) => (b.labs_final??-1)-(a.labs_final??-1));
+  return d;
 }
 
-function render() {
-  const data = getFiltered();
-  renderSummary(data);
-  const tbody = document.getElementById('tableBody');
-  const noRes = document.getElementById('noResults');
+function renderAWS() {
+  const data = getAWSFiltered();
+  const started = data.filter(s => s.final_score > 0).length;
+  document.getElementById('awsSummary').innerHTML = `
+    <div class="card"><div class="num">${data.length}</div><div class="lbl">Students</div></div>
+    <div class="card"><div class="num" style="color:#856404">${started}</div><div class="lbl">Started</div></div>
+    <div class="card"><div class="num" style="color:#aaa">${data.length-started}</div><div class="lbl">Not Started</div></div>
+    <div class="card"><div class="num">6</div><div class="lbl">Labs</div></div>
+    <div class="card"><div class="num">10</div><div class="lbl">Knowledge Checks</div></div>`;
 
-  if (!data.length) { tbody.innerHTML=''; noRes.style.display='block'; return; }
-  noRes.style.display = 'none';
-
-  tbody.innerHTML = data.map((s, i) => {
-    const labLabel = s.lab_status === 'passed' ? 'Passed' : s.lab_status === 'attempted' ? 'Not Passed' : '—';
-    const labScoreHtml = s.lab_score !== null
-      ? `<div class="bar-wrap"><div class="bar"><div class="bar-fill" style="width:${s.lab_score}%;background:${barColor(s.lab_score)}"></div></div><div class="bar-pct">${s.lab_score.toFixed(0)}%</div></div>`
-      : `<span style="color:#ccc">—</span>`;
-
-    const courseLabel = {attempted:'In Progress',not_started:'Not Started',passed:'Passed'}[s.course_status];
-    const courseScoreHtml = s.course_score !== null
-      ? `<div class="bar-wrap"><div class="bar"><div class="bar-fill" style="width:${s.course_score}%;background:${barColor(s.course_score)}"></div></div><div class="bar-pct">${s.course_score.toFixed(1)}%</div></div>`
-      : `<span style="color:#ccc">—</span>`;
-
-    return `<tr>
-      <td style="color:#aaa;font-size:12px">${i+1}</td>
-      <td>
-        <div style="font-weight:600">${formatName(s.name)}</div>
-        <div class="email">${s.email}</div>
-      </td>
-      <td class="center">${badgeHtml(s.lab_status, labLabel)}</td>
-      <td style="min-width:130px">${labScoreHtml}</td>
-      <td class="center"><span class="attempts">${s.lab_attempts > 0 ? s.lab_attempts + 'x' : '—'}</span></td>
-      <td class="center">${badgeHtml(s.course_status, courseLabel)}</td>
-      <td style="min-width:150px">${courseScoreHtml}</td>
-      <td class="center" style="font-size:12px">${s.course_time > 0 ? s.course_time : '—'}</td>
-      <td class="center" style="font-weight:600;font-size:13px">${s.total_time}</td>
-    </tr>`;
-  }).join('');
+  if (!data.length) { document.getElementById('awsBody').innerHTML=''; document.getElementById('awsNoResults').style.display='block'; return; }
+  document.getElementById('awsNoResults').style.display='none';
+  document.getElementById('awsBody').innerHTML = data.map((s,i) => `<tr>
+    <td style="color:#aaa;font-size:11px">${i+1}</td>
+    <td><div style="font-weight:600;font-size:13px">${fmtName(s.name)}</div><div class="email-txt">${s.email}</div></td>
+    ${s.labs.map(v => `<td class="center">${scoreCell(v)}</td>`).join('')}
+    ${s.kcs.map(v => `<td class="center">${scoreCell(v)}</td>`).join('')}
+    ${s.activities.map(v => `<td class="center">${scoreCell(v)}</td>`).join('')}
+    <td class="center">${scoreCell(s.final_score)}</td>
+  </tr>`).join('');
 }
 
-document.getElementById('searchInput').addEventListener('input', render);
-document.getElementById('labFilter').addEventListener('change', render);
-document.getElementById('sortSelect').addEventListener('change', render);
+// ââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// CISCO NETACAD DATA
+// ââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+const ciscoStudents = [
+  {"email":"chanawee.bo.69@ubu.ac.th","name":"Chanawee Boonmanud","exam_submitted":"NO","survey_submitted":"NO","exam_score":null,"assessment":null,"class_grade":0.0},
+  {"email":"wachirawit.bo.69@ubu.ac.th","name":"Wachirawit Boonrin","exam_submitted":"NO","survey_submitted":"NO","exam_score":null,"assessment":null,"class_grade":0.0},
+  {"email":"graiwit.bh.69@ubu.ac.th","name":"Graiwit Bungtong","exam_submitted":"NO","survey_submitted":"NO","exam_score":null,"assessment":null,"class_grade":0.0},
+  {"email":"thanawat.bu.69@ubu.ac.th","name":"Thanawat Butthong","exam_submitted":"NO","survey_submitted":"NO","exam_score":null,"assessment":null,"class_grade":0.0},
+  {"email":"parin.ch.69@ubu.ac.th","name":"Parin Chaimongkol","exam_submitted":"NO","survey_submitted":"NO","exam_score":null,"assessment":null,"class_grade":0.0},
+  {"email":"pannawat.ch.69@ubu.ac.th","name":"Pannawat Chanphen","exam_submitted":"NO","survey_submitted":"NO","exam_score":null,"assessment":null,"class_grade":0.0},
+  {"email":"pawarit.da.69@ubu.ac.th","name":"Pawarit Daengwong","exam_submitted":"NO","survey_submitted":"NO","exam_score":null,"assessment":null,"class_grade":0.0},
+  {"email":"triwitch.de.69@ubu.ac.th","name":"Triwitch Dejprapassorn","exam_submitted":"NO","survey_submitted":"NO","exam_score":null,"assessment":null,"class_grade":0.0},
+  {"email":"prapasinee.in.69@ubu.ac.th","name":"Prapasinee Inkham","exam_submitted":"NO","survey_submitted":"NO","exam_score":null,"assessment":null,"class_grade":0.0},
+  {"email":"tanawit.ji.69@ubu.ac.th","name":"Tanawit Jindarpol","exam_submitted":"NO","survey_submitted":"NO","exam_score":null,"assessment":null,"class_grade":0.0},
+  {"email":"sakaow.ka.69@ubu.ac.th","name":"Sakaow Kaewkiaw","exam_submitted":"NO","survey_submitted":"NO","exam_score":null,"assessment":null,"class_grade":0.0},
+  {"email":"prawonrat.kh.69@ubu.ac.th","name":"Prawonrat Khamchanla","exam_submitted":"NO","survey_submitted":"NO","exam_score":null,"assessment":null,"class_grade":0.0},
+  {"email":"paphawee.kh.69@ubu.ac.th","name":"Paphawee Khamkeng","exam_submitted":"NO","survey_submitted":"NO","exam_score":null,"assessment":null,"class_grade":0.0},
+  {"email":"pramot.kh.69@ubu.ac.th","name":"Pramot Khotha","exam_submitted":"NO","survey_submitted":"NO","exam_score":null,"assessment":null,"class_grade":0.0},
+  {"email":"pakin.na.69@ubu.ac.th","name":"Pakin Namburi","exam_submitted":"NO","survey_submitted":"NO","exam_score":null,"assessment":null,"class_grade":0.0},
+  {"email":"chichaya.na.69@ubu.ac.th","name":"Chichaya Naruemitgrimkamol","exam_submitted":"NO","survey_submitted":"NO","exam_score":null,"assessment":null,"class_grade":0.0},
+  {"email":"siraphob.ni.69@ubu.ac.th","name":"Siraphob Niaophan","exam_submitted":"NO","survey_submitted":"NO","exam_score":null,"assessment":null,"class_grade":0.0},
+  {"email":"supichaya.pa.69@ubu.ac.th","name":"Supichaya Patama","exam_submitted":"NO","survey_submitted":"NO","exam_score":null,"assessment":null,"class_grade":0.0},
+  {"email":"nattaphat.pha.69@ubu.ac.th","name":"Nattaphat Phanyoo","exam_submitted":"NO","survey_submitted":"NO","exam_score":null,"assessment":null,"class_grade":0.0},
+  {"email":"ajalawit.ph.69@ubu.ac.th","name":"Ajalawit Phowan","exam_submitted":"NO","survey_submitted":"NO","exam_score":null,"assessment":null,"class_grade":0.0},
+  {"email":"nhannaphat.pi.69@ubu.ac.th","name":"Nhannaphat Pimpak","exam_submitted":"NO","survey_submitted":"NO","exam_score":null,"assessment":null,"class_grade":0.0},
+  {"email":"wimonrat.pr.69@ubu.ac.th","name":"Wimonrat Prasertsin","exam_submitted":"NO","survey_submitted":"NO","exam_score":null,"assessment":null,"class_grade":0.0},
+  {"email":"chisanapat.pu.69@ubu.ac.th","name":"Chisanapat Puwapakin","exam_submitted":"NO","survey_submitted":"NO","exam_score":null,"assessment":null,"class_grade":0.0},
+  {"email":"pannawit.ra.69@ubu.ac.th","name":"Pannawit Ratchain","exam_submitted":"NO","survey_submitted":"NO","exam_score":null,"assessment":null,"class_grade":0.0},
+  {"email":"treeradet.ri.69@ubu.ac.th","name":"Treeradet Ritkomrop","exam_submitted":"NO","survey_submitted":"NO","exam_score":null,"assessment":null,"class_grade":0.0},
+  {"email":"natthanicha.ro.69@ubu.ac.th","name":"Natthanicha Roplok","exam_submitted":"NO","survey_submitted":"NO","exam_score":null,"assessment":null,"class_grade":0.0},
+  {"email":"natthida.sa.69@ubu.ac.th","name":"Natthida Saisuk","exam_submitted":"NO","survey_submitted":"NO","exam_score":null,"assessment":null,"class_grade":0.0},
+  {"email":"phuwanat.sa.69@ubu.ac.th","name":"Phuwanat Saiwaew","exam_submitted":"NO","survey_submitted":"NO","exam_score":null,"assessment":null,"class_grade":0.0},
+  {"email":"tirapat.sa.69@ubu.ac.th","name":"Tirapat Saohong","exam_submitted":"NO","survey_submitted":"NO","exam_score":null,"assessment":null,"class_grade":0.0},
+  {"email":"natthakit.sr.69@ubu.ac.th","name":"Natthakit Srichan","exam_submitted":"NO","survey_submitted":"NO","exam_score":null,"assessment":null,"class_grade":0.0},
+  {"email":"lakkana.sr.69@ubu.ac.th","name":"Lakkana Sripo","exam_submitted":"NO","survey_submitted":"NO","exam_score":null,"assessment":null,"class_grade":0.0},
+  {"email":"wanatcharnan.su.69@ubu.ac.th","name":"Wanatcharnan Suntiwichaikul","exam_submitted":"NO","survey_submitted":"NO","exam_score":null,"assessment":null,"class_grade":0.0},
+  {"email":"vayu.th.69@ubu.ac.th","name":"Vayu Tasom","exam_submitted":"NO","survey_submitted":"NO","exam_score":null,"assessment":null,"class_grade":0.0},
+  {"email":"natnicha.th.69@ubu.ac.th","name":"Natnicha Thamhin","exam_submitted":"NO","survey_submitted":"NO","exam_score":null,"assessment":null,"class_grade":0.0},
+  {"email":"chalermsak.th.69@ubu.ac.th","name":"Chalermsak Thonghai","exam_submitted":"NO","survey_submitted":"NO","exam_score":null,"assessment":null,"class_grade":0.0},
+  {"email":"sirapat.th.69@ubu.ac.th","name":"Sirapat Thongnoi","exam_submitted":"NO","survey_submitted":"NO","exam_score":null,"assessment":null,"class_grade":0.0},
+  {"email":"peerada.tu.69@ubu.ac.th","name":"Peerada Tungmun","exam_submitted":"NO","survey_submitted":"NO","exam_score":null,"assessment":null,"class_grade":0.0},
+  {"email":"danupisit.wa.69@ubu.ac.th","name":"Danupisit Wantunad","exam_submitted":"NO","survey_submitted":"NO","exam_score":null,"assessment":null,"class_grade":0.0}
+];
 
-render();
+function getCiscoFiltered() {
+  const q = document.getElementById('ciscoSearch').value.toLowerCase();
+  const s = document.getElementById('ciscoSort').value;
+  let d = [...ciscoStudents];
+  if (q) d = d.filter(x => x.name.toLowerCase().includes(q) || x.email.includes(q));
+  if (s === 'grade_desc') d.sort((a,b) => (b.class_grade??-1)-(a.class_grade??-1));
+  if (s === 'exam_desc')  d.sort((a,b) => (b.exam_score??-1)-(a.exam_score??-1));
+  if (s === 'name')       d.sort((a,b) => a.name.localeCompare(b.name));
+  return d;
+}
+
+function renderCisco() {
+  const data = getCiscoFiltered();
+  const examDone = data.filter(s => s.exam_submitted === 'YES').length;
+  const surveyDone = data.filter(s => s.survey_submitted === 'YES').length;
+  const withGrade = data.filter(s => s.class_grade > 0).length;
+  document.getElementById('ciscoSummary').innerHTML = `
+    <div class="card"><div class="num">${data.length}</div><div class="lbl">Students</div></div>
+    <div class="card"><div class="num" style="color:#1e7e34">${examDone}</div><div class="lbl">Exam Submitted</div></div>
+    <div class="card"><div class="num" style="color:#1e7e34">${surveyDone}</div><div class="lbl">Survey Submitted</div></div>
+    <div class="card"><div class="num">${withGrade}</div><div class="lbl">With Grade</div></div>`;
+
+  if (!data.length) { document.getElementById('ciscoBody').innerHTML=''; document.getElementById('ciscoNoResults').style.display='block'; return; }
+  document.getElementById('ciscoNoResults').style.display='none';
+  document.getElementById('ciscoBody').innerHTML = data.map((s,i) => `<tr>
+    <td style="color:#aaa;font-size:11px">${i+1}</td>
+    <td><div style="font-weight:600;font-size:13px">${s.name}</div><div class="email-txt">${s.email}</div></td>
+    <td class="center"><span class="badge ${s.exam_submitted==='YES'?'b-passed':'b-none'}">${s.exam_submitted}</span></td>
+    <td class="center"><span class="badge ${s.survey_submitted==='YES'?'b-passed':'b-none'}">${s.survey_submitted}</span></td>
+    <td class="center">${s.exam_score!==null?`<span style="font-weight:600">${s.exam_score}</span>`:'<span style="color:#ccc">â</span>'}</td>
+    <td>${s.assessment!==null?barHtml(s.assessment):'<span style="color:#ccc">â</span>'}</td>
+    <td class="center">${s.class_grade>0?`<span style="font-weight:600">${s.class_grade.toFixed(2)}%</span>`:'<span style="color:#ccc">â</span>'}</td>
+  </tr>`).join('');
+}
+
+// ââ Init ââââââââââââââââââââââââââââââââââââââââââââââ
+renderGoogle();
+renderAWS();
+renderCisco();
 </script>
 </body>
 </html>
