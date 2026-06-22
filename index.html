@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cloud Computing Fundamentals — Student Progress</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: Arial, sans-serif; background: #f4f6fb; color: #222; }
+
+  header {
+    background: linear-gradient(135deg, #1a73e8, #0d47a1);
+    color: white; padding: 24px 32px;
+  }
+  header h1 { font-size: 20px; font-weight: 700; }
+  header p  { font-size: 12px; opacity: 0.85; margin-top: 4px; }
+
+  .summary-bar { display: flex; gap: 16px; padding: 20px 32px; flex-wrap: wrap; }
+  .card {
+    background: white; border-radius: 10px; padding: 16px 22px;
+    flex: 1; min-width: 130px;
+    box-shadow: 0 1px 4px rgba(0,0,0,.08); text-align: center;
+  }
+  .card .num { font-size: 30px; font-weight: 700; color: #1a73e8; }
+  .card .lbl { font-size: 11px; color: #666; margin-top: 4px; }
+
+  .filters { padding: 0 32px 16px; display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+  .filters label { font-size: 13px; color: #555; }
+  .filters select, .filters input {
+    border: 1px solid #ccd; border-radius: 6px;
+    padding: 6px 10px; font-size: 13px; background: white;
+  }
+
+  .table-wrap { padding: 0 32px 40px; overflow-x: auto; }
+  table {
+    width: 100%; border-collapse: collapse; background: white;
+    border-radius: 10px; overflow: hidden;
+    box-shadow: 0 1px 4px rgba(0,0,0,.08); font-size: 13px;
+  }
+  thead th {
+    background: #1a73e8; color: white;
+    padding: 12px 14px; text-align: left; font-weight: 600;
+  }
+  thead th.center { text-align: center; }
+  tbody tr { border-bottom: 1px solid #eef; }
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: #f0f5ff; }
+  td { padding: 10px 14px; vertical-align: middle; }
+  td.center { text-align: center; }
+  .email { font-size: 11px; color: #999; }
+
+  .status-badge {
+    display: inline-block; border-radius: 5px;
+    font-size: 11px; font-weight: 600; padding: 3px 9px;
+  }
+  .status-attempted   { background: #fff3cd; color: #856404; }
+  .status-not_started { background: #f1f3f4; color: #aaa; }
+  .status-passed      { background: #e6f4ea; color: #1e7e34; }
+
+  .bar-wrap { display: flex; align-items: center; gap: 8px; }
+  .bar { height: 10px; border-radius: 5px; background: #e0e0e0; flex: 1; min-width: 80px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 5px; }
+  .bar-pct { font-size: 11px; color: #555; min-width: 36px; text-align: right; }
+
+  .no-results { text-align: center; color: #aaa; padding: 32px; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Google Cloud Computing Foundations: Cloud Computing Fundamentals</h1>
+  <p>Cloud Technology for AI · Ubon Ratchathani University · June 22, 2026</p>
+</header>
+
+<div class="summary-bar" id="summaryBar"></div>
+
+<div class="filters">
+  <label>Search: <input type="text" id="searchInput" placeholder="name or email…" style="width:200px"></label>
+  <label>Status:
+    <select id="filterSelect">
+      <option value="all">All students</option>
+      <option value="attempted">Attempted</option>
+      <option value="not_started">Not started</option>
+      <option value="passed">Passed</option>
+    </select>
+  </label>
+  <label>Sort by:
+    <select id="sortSelect">
+      <option value="score_desc">Score (high→low)</option>
+      <option value="score_asc">Score (low→high)</option>
+      <option value="name">Name (A→Z)</option>
+      <option value="time_desc">Time spent (high→low)</option>
+    </select>
+  </label>
+</div>
+
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Student</th>
+        <th class="center">Status</th>
+        <th>Score / Progress</th>
+        <th class="center">Time (min)</th>
+        <th class="center">Date Started</th>
+      </tr>
+    </thead>
+    <tbody id="tableBody"></tbody>
+  </table>
+  <div class="no-results" id="noResults" style="display:none">No students match your filter.</div>
+</div>
+
+<script>
+const students = [
+  {"email":"ajalawit.ph.69@ubu.ac.th","name":"ajalawit.ph.69","status":"not_started","score":null,"time":0,"date_started":null},
+  {"email":"chalermsak.th.69@ubu.ac.th","name":"chalermsak.th.69","status":"attempted","score":4.88,"time":45,"date_started":"15 Jun 2026"},
+  {"email":"chanawee.bo.69@ubu.ac.th","name":"chanawee.bo.69","status":"not_started","score":null,"time":0,"date_started":null},
+  {"email":"chichaya.na.69@ubu.ac.th","name":"chichaya.na.69","status":"attempted","score":41.46,"time":68,"date_started":"15 Jun 2026"},
+  {"email":"chisanapat.pu.69@ubu.ac.th","name":"chisanapat.pu.69","status":"attempted","score":0.0,"time":66,"date_started":"15 Jun 2026"},
+  {"email":"danupisit.wa.69@ubu.ac.th","name":"danupisit.wa.69","status":"attempted","score":0.0,"time":47,"date_started":"15 Jun 2026"},
+  {"email":"graiwit.bh.69@ubu.ac.th","name":"graiwit.bh.69","status":"attempted","score":39.02,"time":75,"date_started":"15 Jun 2026"},
+  {"email":"lakkana.sr.69@ubu.ac.th","name":"lakkana.sr.69","status":"attempted","score":63.41,"time":101,"date_started":"15 Jun 2026"},
+  {"email":"natnicha.th.69@ubu.ac.th","name":"natnicha.th.69","status":"not_started","score":null,"time":0,"date_started":null},
+  {"email":"nattaphat.pha.69@ubu.ac.th","name":"nattaphat.pha.69","status":"attempted","score":2.44,"time":0,"date_started":"15 Jun 2026"},
+  {"email":"natthakit.sr.69@ubu.ac.th","name":"natthakit.sr.69","status":"attempted","score":19.51,"time":80,"date_started":"15 Jun 2026"},
+  {"email":"natthanicha.ro.69@ubu.ac.th","name":"natthanicha.ro.69","status":"not_started","score":null,"time":0,"date_started":null},
+  {"email":"natthida.sa.69@ubu.ac.th","name":"natthida.sa.69","status":"attempted","score":4.88,"time":45,"date_started":"15 Jun 2026"},
+  {"email":"nhannaphat.pi.69@ubu.ac.th","name":"nhannaphat.pi.69","status":"attempted","score":80.49,"time":103,"date_started":"15 Jun 2026"},
+  {"email":"pakin.na.69@ubu.ac.th","name":"pakin.na.69","status":"attempted","score":2.44,"time":46,"date_started":"15 Jun 2026"},
+  {"email":"pannawat.ch.69@ubu.ac.th","name":"pannawat.ch.69","status":"attempted","score":2.44,"time":74,"date_started":"15 Jun 2026"},
+  {"email":"pannawit.ra.69@ubu.ac.th","name":"pannawit.ra.69","status":"attempted","score":7.32,"time":45,"date_started":"15 Jun 2026"},
+  {"email":"paphawee.kh.69@ubu.ac.th","name":"paphawee.kh.69","status":"not_started","score":null,"time":0,"date_started":null},
+  {"email":"parin.ch.69@ubu.ac.th","name":"parin.ch.69","status":"attempted","score":7.32,"time":91,"date_started":"15 Jun 2026"},
+  {"email":"pawarit.da.69@ubu.ac.th","name":"pawarit.da.69","status":"attempted","score":17.07,"time":48,"date_started":"15 Jun 2026"},
+  {"email":"peerada.tu.69@ubu.ac.th","name":"peerada.tu.69","status":"attempted","score":36.59,"time":76,"date_started":"15 Jun 2026"},
+  {"email":"phuwanat.sa.69@ubu.ac.th","name":"phuwanat.sa.69","status":"attempted","score":4.88,"time":45,"date_started":"15 Jun 2026"},
+  {"email":"pramot.kh.69@ubu.ac.th","name":"pramot.kh.69","status":"attempted","score":0.0,"time":45,"date_started":"15 Jun 2026"},
+  {"email":"prapasinee.in.69@ubu.ac.th","name":"prapasinee.in.69","status":"attempted","score":4.88,"time":45,"date_started":"15 Jun 2026"},
+  {"email":"prawonrat.kh.69@ubu.ac.th","name":"prawonrat.kh.69","status":"attempted","score":0.0,"time":43,"date_started":"15 Jun 2026"},
+  {"email":"sakaow.ka.69@ubu.ac.th","name":"sakaow.ka.69","status":"not_started","score":null,"time":0,"date_started":null},
+  {"email":"sirapat.th.69@ubu.ac.th","name":"sirapat.th.69","status":"attempted","score":2.44,"time":100,"date_started":"15 Jun 2026"},
+  {"email":"siraphob.ni.69@ubu.ac.th","name":"siraphob.ni.69","status":"not_started","score":null,"time":0,"date_started":null},
+  {"email":"supichaya.pa.69@ubu.ac.th","name":"supichaya.pa.69","status":"attempted","score":21.95,"time":54,"date_started":"15 Jun 2026"},
+  {"email":"tanawit.ji.69@ubu.ac.th","name":"tanawit.ji.69","status":"not_started","score":null,"time":0,"date_started":null},
+  {"email":"thanawat.bu.69@ubu.ac.th","name":"thanawat.bu.69","status":"attempted","score":4.88,"time":45,"date_started":"15 Jun 2026"},
+  {"email":"tirapat.sa.69@ubu.ac.th","name":"tirapat.sa.69","status":"not_started","score":null,"time":0,"date_started":null},
+  {"email":"treeradet.ri.69@ubu.ac.th","name":"treeradet.ri.69","status":"attempted","score":2.44,"time":48,"date_started":"15 Jun 2026"},
+  {"email":"triwitch.de.69@ubu.ac.th","name":"triwitch.de.69","status":"attempted","score":2.44,"time":43,"date_started":"15 Jun 2026"},
+  {"email":"vayu.th.69@ubu.ac.th","name":"vayu.th.69","status":"attempted","score":29.27,"time":51,"date_started":"15 Jun 2026"},
+  {"email":"wachirawit.bo.69@ubu.ac.th","name":"wachirawit.bo.69","status":"attempted","score":65.85,"time":47,"date_started":"17 Jun 2026"},
+  {"email":"wanatcharnan.su.69@ubu.ac.th","name":"wanatcharnan.su.69","status":"attempted","score":24.39,"time":63,"date_started":"15 Jun 2026"},
+  {"email":"wimonrat.pr.69@ubu.ac.th","name":"wimonrat.pr.69","status":"attempted","score":39.02,"time":73,"date_started":"15 Jun 2026"}
+];
+
+function barColor(pct) {
+  if (pct >= 80) return '#1e7e34';
+  if (pct >= 50) return '#1a73e8';
+  if (pct >= 20) return '#f0a500';
+  return '#e53935';
+}
+
+function formatName(name) {
+  const parts = name.split('.');
+  return parts.slice(0, 2).map(p => p.charAt(0).toUpperCase() + p.slice(1)).join(' ');
+}
+
+function renderSummary(data) {
+  const total    = data.length;
+  const attempted  = data.filter(s => s.status === 'attempted').length;
+  const notStarted = data.filter(s => s.status === 'not_started').length;
+  const scored = data.filter(s => s.score !== null && s.score > 0);
+  const avgScore = scored.length ? (scored.reduce((s,x)=>s+x.score,0)/scored.length).toFixed(1) : '—';
+
+  document.getElementById('summaryBar').innerHTML = `
+    <div class="card"><div class="num">${total}</div><div class="lbl">Total Students</div></div>
+    <div class="card"><div class="num" style="color:#856404">${attempted}</div><div class="lbl">In Progress</div></div>
+    <div class="card"><div class="num" style="color:#aaa">${notStarted}</div><div class="lbl">Not Started</div></div>
+    <div class="card"><div class="num" style="color:#1a73e8">${avgScore}%</div><div class="lbl">Avg Score (active)</div></div>
+  `;
+}
+
+function getFiltered() {
+  const q = document.getElementById('searchInput').value.toLowerCase();
+  const f = document.getElementById('filterSelect').value;
+  const s = document.getElementById('sortSelect').value;
+
+  let data = [...students];
+  if (q) data = data.filter(x => x.name.toLowerCase().includes(q) || x.email.toLowerCase().includes(q));
+  if (f !== 'all') data = data.filter(x => x.status === f);
+
+  if (s === 'score_desc') data.sort((a,b) => (b.score??-1) - (a.score??-1));
+  if (s === 'score_asc')  data.sort((a,b) => (a.score??-1) - (b.score??-1));
+  if (s === 'name')       data.sort((a,b) => a.name.localeCompare(b.name));
+  if (s === 'time_desc')  data.sort((a,b) => b.time - a.time);
+
+  return data;
+}
+
+function render() {
+  const data = getFiltered();
+  renderSummary(data);
+  const tbody = document.getElementById('tableBody');
+  const noRes = document.getElementById('noResults');
+
+  if (data.length === 0) {
+    tbody.innerHTML = '';
+    noRes.style.display = 'block';
+    return;
+  }
+  noRes.style.display = 'none';
+
+  tbody.innerHTML = data.map((s, i) => {
+    const scoreDisplay = s.score !== null
+      ? `<div class="bar-wrap">
+           <div class="bar"><div class="bar-fill" style="width:${s.score}%;background:${barColor(s.score)}"></div></div>
+           <div class="bar-pct">${s.score.toFixed(1)}%</div>
+         </div>`
+      : `<span style="color:#ccc;font-size:12px">—</span>`;
+
+    const statusLabel = {
+      attempted: 'In Progress',
+      not_started: 'Not Started',
+      passed: 'Passed'
+    }[s.status];
+
+    return `<tr>
+      <td style="color:#aaa;font-size:12px">${i+1}</td>
+      <td>
+        <div style="font-weight:600">${formatName(s.name)}</div>
+        <div class="email">${s.email}</div>
+      </td>
+      <td class="center"><span class="status-badge status-${s.status}">${statusLabel}</span></td>
+      <td style="min-width:180px">${scoreDisplay}</td>
+      <td class="center">${s.time > 0 ? s.time : '—'}</td>
+      <td class="center" style="font-size:12px;color:#666">${s.date_started ?? '—'}</td>
+    </tr>`;
+  }).join('');
+}
+
+document.getElementById('searchInput').addEventListener('input', render);
+document.getElementById('filterSelect').addEventListener('change', render);
+document.getElementById('sortSelect').addEventListener('change', render);
+
+render();
+</script>
+</body>
+</html>
